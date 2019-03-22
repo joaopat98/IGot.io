@@ -82,6 +82,15 @@ DATABASES = {
     'default': credentials["DATABASE"]
 }
 
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "templates"),
+]
+
+STATIC_URL = '/static/'
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
