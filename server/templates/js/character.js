@@ -51,7 +51,7 @@ class Character extends createjs.Container {
         }
     }
 
-    move(delta) {
+    move(delta, ws) {
         let right = 68, left = 65, up = 87, down = 83, laserRight = 75, laserLeft = 74, spacebar = 32;
         let tx = 0, ty = 0;
         if (this.keys[right] || this.keys[left] || this.keys[up] || this.keys[down]) {
@@ -111,6 +111,10 @@ class Character extends createjs.Container {
         if (this.keys[spacebar] && this.shootOnce) {
             this.shootOnce = false;
             this.laserSprite.gotoAndPlay("shoot");
+            ws.send(JSON.stringify({
+                action: "fire",
+                rotation: this.rotation
+            }));
         }
     }
 }
