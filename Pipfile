@@ -10,6 +10,7 @@ django = "*"
 channels = "*"
 psycopg2 = "*"
 channels-redis = "*"
+opensimplex = "*"
 
 [requires]
 python_version = "3.6"

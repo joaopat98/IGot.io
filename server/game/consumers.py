@@ -2,6 +2,7 @@
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
+from . import data
 
 
 class GameConsumer(WebsocketConsumer):
@@ -15,16 +16,21 @@ class GameConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
-            str(self.scope["session"]["song"]),
+            "test",
             self.channel_name
         )
 
     # Receive message from WebSocket
     def receive(self, text_data):
         print(text_data)
-        return \
+        data.lst.append(text_data)
+        self.send(text_data=json.dumps({
+            'message': data.lst
+        }))
 
-    # Receive message from room group
-    def chat_message(self, event):
+        # Receive message from room group
+
+    def message(self, event):
         message = event['message']
-        obj = json.loads(message)
+        self.send(message)
+
