@@ -16,11 +16,12 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    path("api/", include('account.urls')),
+    path("api/", include('game.urls')),
     path("play", TemplateView.as_view(template_name="game.html")),
-    url(r'^', TemplateView.as_view(template_name="test.html")),
+    url(r'^', ensure_csrf_cookie(TemplateView.as_view(template_name="test.html"))),
 ]

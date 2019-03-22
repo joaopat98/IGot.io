@@ -2,7 +2,7 @@
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
-from . import data
+from .data import *
 
 
 class GameConsumer(WebsocketConsumer):
@@ -22,11 +22,10 @@ class GameConsumer(WebsocketConsumer):
 
     # Receive message from WebSocket
     def receive(self, text_data):
-        print(text_data)
-        data.lst.append(text_data)
-        self.send(text_data=json.dumps({
-            'message': data.lst
-        }))
+        obj = json.loads(text_data)
+        if obj["action"] == "move":
+            players[self.scope["session"]["player"]].x += obj["deltaX"]
+            players[self.scope["session"]["player"]].y += obj["deltaY"]
 
         # Receive message from room group
 
