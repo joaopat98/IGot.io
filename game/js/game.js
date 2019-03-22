@@ -8,11 +8,12 @@ function loadImages() {
 	queue.on("complete", init, this);
 	queue.loadFile({src:"res/tile.png", crossOrigin:true, id:"tile"});
 	queue.loadFile({src:"res/skin_warrior.png", crossOrigin:true, id:"warrior"});
+	queue.loadFile({src:"res/laser.png", crossOrigin:true, id:"laser"});
 }
 
 function init() {
 	stage = new createjs.Stage("canvas");
-	player = new Character(0, 0, queue.getResult("warrior"), 726, 543, true, mapWidth, mapHeight);
+	player = new Character(0, 0, queue.getResult("warrior"), 726, 543, queue.getResult("laser"), 595, 64, true, mapWidth, mapHeight);
 	arena = new Arena(queue.getResult("tile"), player, time, mapWidth, mapHeight);
 	arena.x = window.innerWidth / 2;
 	arena.y = window.innerHeight / 2;
@@ -31,9 +32,9 @@ function display(ev) {
 	resize();
 	player.move(ev.delta);
 	
-	arena.regX = Math.min(Math.max(- mapWidth/2 + stage.canvas.width/2,player.sprite.x),mapWidth/2 - stage.canvas.width/2);
-	arena.regY = Math.min(Math.max(- mapHeight/2 + stage.canvas.height/2,player.sprite.y),mapHeight/2 - stage.canvas.height/2);
-
+	arena.regX = Math.min(Math.max(- mapWidth/2 + stage.canvas.width/2, player.sprite.x), mapWidth/2 - stage.canvas.width/2);
+	arena.regY = Math.min(Math.max(- mapHeight/2 + stage.canvas.height/2, player.sprite.y), mapHeight/2 - stage.canvas.height/2);
+	
 	/*
 	if(player.sprite.x > - mapWidth/2 + stage.canvas.width/2 && player.sprite.x < mapWidth/2 - stage.canvas.width/2)
 		arena.regX = player.sprite.x;
@@ -53,4 +54,7 @@ function config() {
 
 function keyHandler(ev) {
 	arena.player.keys[ev.keyCode] = (ev.type === "keydown");
+	if(player.shootOnce == false && ev.type === "keyup" && ev.keyCode == 32) {
+		arena.player.shootOnce = true;
+	}
 }

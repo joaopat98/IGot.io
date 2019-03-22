@@ -1,10 +1,11 @@
 "use strict";
 
 class Character extends createjs.Container {
-	constructor(x, y, sprite, spriteWidth, spriteHeight, isPlayer, mapWidth, mapHeight) {
+	constructor(x, y, sprite, spriteWidth, spriteHeight, laserSprite, laserWidth, laserHeight, isPlayer, mapWidth, mapHeight) {
 		super();
+		this.shootOnce = true;
 		this.moveSpeed = 500;
-		this.turnSpeed = 150;
+		this.turnSpeed = 250;
 		this.mapWidth = mapWidth;
 		this.mapHeight = mapHeight;
 		this.keys = new Array();
@@ -20,6 +21,26 @@ class Character extends createjs.Container {
 		this.sprite.x = x;
 		this.sprite.y = y;
 		this.sprite.rotation = 0;
+		var laserSpriteSheet = new createjs.SpriteSheet({
+			images: [laserSprite],
+			frames: {"width": laserWidth, "height": laserHeight, "regX": -this.height, "regY": laserHeight/2},
+			animations: {
+				"idle":{
+					frames: [0],
+					next: "idle",
+				},
+				"shoot": {
+					frames: [1, 2, 3, 4, 3, 2, 1],
+					next: "idle",
+					speed: .75,
+				},
+			}
+		});
+		this.laserSprite = new createjs.Sprite(laserSpriteSheet, "idle");
+		this.laserSprite.scale = 0.50;
+		this.laserSprite.x = this.sprite.x;
+		this.laserSprite.y = this.sprite.y;
+		this.laserSprite.rotation = 90;
 	}
 
 	move(delta) {
@@ -55,6 +76,8 @@ class Character extends createjs.Container {
 				&& this.sprite.y + movementY < mapHeight/2 - this.height/2) {
 					this.sprite.x += movementX;
 					this.sprite.y += movementY;
+					this.laserSprite.x += movementX;
+					this.laserSprite.y += movementY;
 				}
 				
 				//this.sprite.x += (cos * tx + sin * ty) * this.moveSpeed * (delta / 1000);
@@ -67,7 +90,13 @@ class Character extends createjs.Container {
 			let tr = (this.keys[laserLeft] ? 1 : 0) + (this.keys[laserRight] ? -1 : 0);
 			if(tr != 0) {
 				this.sprite.rotation -= tr * this.turnSpeed * (delta / 1000);
+				this.laserSprite.rotation -= tr * this.turnSpeed * (delta / 1000);
 			}
+		}
+		
+		if(this.keys[spacebar] && this.shootOnce) {
+			this.shootOnce = false;
+			this.laserSprite.gotoAndPlay("shoot");
 		}
 	}
 }
