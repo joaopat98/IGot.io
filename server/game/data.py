@@ -1,6 +1,6 @@
 import datetime
 import json
-from math import sqrt
+from math import sqrt, floor, cos
 from threading import Thread, Lock
 from random import Random
 from time import sleep
@@ -11,7 +11,7 @@ from math import atan2, degrees, radians, tan, sin
 
 players = {}
 bots = {}
-NUM_BOTS = 10
+NUM_BOTS = 20
 max_id = 0
 TIME_DIV = 1000
 epoch = datetime.datetime.utcfromtimestamp(0)
@@ -24,27 +24,19 @@ fov = 600
 baseY = 0
 
 
+def mod(a, n):
+    return a - floor(a / n) * n
+
+
 def is_in_range(x, y, ang):
-    global baseY
-    m = tan(radians(ang))
-    baseY = abs(m * x)
-    if (-y > 0 and ang == 90) or (-y < 0 and ang == 270):
-        return -char_size / 2 <= x <= char_size / 2
-    if (x > 0 and ang == 0) or (x < 0 and ang == 180):
-        return -char_size / 2 <= -y <= char_size / 2
-    delta = abs(char_size / 2 / sin(radians(ang)))
-    if x > 0:
-        if ang < 90:
-            return -baseY - delta <= y <= -baseY + delta
-        elif ang > 270:
-            return baseY - delta <= y <= baseY + delta
-        return False
-    elif x < 0:
-        if ang < 180:
-            return -baseY - delta <= y <= -baseY + delta
-        elif ang > 180:
-            return baseY - delta <= y <= baseY + delta
-        return False
+    y = -y
+    p_1 = cos(radians(ang)) * fov
+    p_2 = sin(radians(ang)) * fov
+    magn = sqrt(p_1 ** 2 + p_2 ** 2)
+    p_1 /= magn
+    p_2 /= magn
+    v = abs(p_1 * y - p_2 * x)
+    return v <= char_size / 2
 
 
 def dist(player, target):
@@ -160,7 +152,7 @@ class Updater(Thread):
                              list(map(lambda p: p.serialize(), players.values()))
                 })
             })
-            sleep(1/100)
+            sleep(1 / 100)
 
 
 rand = Random()
