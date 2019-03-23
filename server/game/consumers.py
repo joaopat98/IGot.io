@@ -31,7 +31,7 @@ class GameConsumer(WebsocketConsumer):
             target = get_target(player, obj["rotation"])
             if target is not None:
                 if target.is_player:
-                    del players[target.uid]
+                    target.reset_pos()
                 else:
                     del bots[target.uid]
 
