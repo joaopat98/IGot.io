@@ -6,3 +6,7 @@ def homepage(request):
 def pay_mobile(request, skin):
 	data = {'value': 3};
 	return render(request, 'pay_mobile.html', data);
+
+def pay_qrcode(request, skin):
+	data = {'value': 3};
+	return render(request, 'pay_qrcode.html', data);

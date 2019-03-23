@@ -28,6 +28,7 @@ urlpatterns = [
     path("play", TemplateView.as_view(template_name="game.html")),
     path("shop", TemplateView.as_view(template_name="shop.html")),
     path('pay/mobile/<slug:skin>', views.pay_mobile),
+    path('pay/qrcode/<slug:skin>', views.pay_qrcode),
     url(r'^', views.homepage),
     #url(r'^', ensure_csrf_cookie(TemplateView.as_view(template_name="index.html"))),
 ]
