@@ -7,7 +7,7 @@ class Profile(models.Model):
         super().__init__(*args, **kwargs)
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name="user_profile")
-    phone_number = models.CharField(max_length=20, blank=True)
+    phone_number = models.CharField(max_length=20, null=True)
     max_score = models.IntegerField(default=0)
     current_skin = models.CharField(max_length=100, default="default")
 

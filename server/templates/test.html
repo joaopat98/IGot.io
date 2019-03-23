@@ -5,6 +5,7 @@
     <title>Title</title>
 </head>
 <body>
+{% csrf_token %}
 <canvas id="canvas" width="1000" height="1000"></canvas>
 <script>
     let ctx = document.getElementById("canvas").getContext("2d");
