@@ -23,6 +23,7 @@ class GameConsumer(WebsocketConsumer):
         self.accept()
 
     def disconnect(self, close_code):
+        del players[self.scope["session"]["player"]]
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
             "test",
@@ -50,6 +51,8 @@ class GameConsumer(WebsocketConsumer):
                     player.score -= bot_kill
                     database_sync_to_async(updateScore(player.score, self.scope["session"]["name"]))
                     del bots[target.uid]
+                    new_c = Character(map_width, map_height, rand, max_id, speed, False)
+                    bots[target.uid] = new_c
 
         # Receive message from room group
 

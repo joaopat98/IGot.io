@@ -18,8 +18,12 @@ class LeaderBoard extends createjs.Container {
     }
 
     update(data){
-        for (let i = 0; i < data.length; i++) {
+        let i;
+        for (i = 0; i < data.length; i++) {
             this.entries[i].text = (i+1) + ". " + data[i].name + " - " + data[i].score;
+        }
+        for (; i < 10; i++) {
+            this.entries[i].text = "";
         }
     }
 }

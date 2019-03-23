@@ -52,7 +52,7 @@ function loadMusic() {
     /*Music/Sound Stuff*/
     createjs.Sound.alternateExtensions = ["mp3"];
     createjs.Sound.on("fileload", playMenuSong);
-    createjs.Sound.registerSound("static/res/background_music.mp3", "menuMusic", 1);
+    createjs.Sound.registerSound("static/res/sound/background_music.mp3", "menuMusic", 1);
     //createjs.Sound.registerSound("../Resources/Audio/gameMusic.mp3", "gameMusic", 2);
 
 }
