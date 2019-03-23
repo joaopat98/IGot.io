@@ -8,6 +8,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from opensimplex import OpenSimplex
 from math import atan2, degrees, radians, tan, sin
+from .models import Skin
 
 players = {}
 bots = {}
@@ -20,7 +21,7 @@ map_height = 3000
 char_size = 80
 old_t = (datetime.datetime.now() - epoch).total_seconds()
 speed = 250
-fov = 600
+fov = 450
 baseY = 0
 bot_kill = 1
 player_kill = 5
@@ -80,16 +81,19 @@ def synchronized(func):
 
 
 @synchronized
-def new_player(name):
+def new_player(name, user):
     global max_id
-    c = Character(1000, 1000, rand, max_id, 1, True, name)
+    if user.is_authenticated:
+        c = Character(1000, 1000, rand, max_id, 1, True, name, user.current_skin)
+    else:
+        c = Character(1000, 1000, rand, max_id, 1, True, name)
     players[c.uid] = c
     max_id += 1
     return c
 
 
 class Character:
-    def __init__(self, max_x, max_y, random, uid, speed, is_player, name=None):
+    def __init__(self, max_x, max_y, random, uid, speed, is_player, name=None, skin_slang="default"):
         self.x = (random.random() - 0.5) * max_x
         self.y = (random.random() - 0.5) * max_y
         self.name = name
@@ -104,7 +108,10 @@ class Character:
         self.noiseX = OpenSimplex(seed=random.randint(0, 1000000000))
         self.noiseY = OpenSimplex(seed=random.randint(0, 1000000000))
         self.speed = speed
-        self.skin = rand.randint(0, 10)
+        if not is_player:
+            self.skin = list(Skin.objects.all())[rand.randint(0, Skin.objects.count()-1)].slang
+        else:
+            self.skin = Skin.objects.filter(slang=skin_slang).first().slang
 
     def reset(self):
         self.x = (self.random.random() - 0.5) * self.max_x
@@ -168,7 +175,8 @@ class Updater(Thread):
                 "message": json.dumps({
                     "chars": list(map(lambda b: b.serialize(), bots.values())) +
                              list(map(lambda p: p.serialize(), players.values())),
-                    "leaderboard": selected
+                    "leaderboard": selected,
+                    "number_players": len(players.keys())
                 })
             })
 

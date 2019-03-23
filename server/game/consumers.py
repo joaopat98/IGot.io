@@ -23,6 +23,7 @@ class GameConsumer(WebsocketConsumer):
         self.accept()
 
     def disconnect(self, close_code):
+        del players[self.scope["session"]["player"]]
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
             "test",
@@ -34,8 +35,11 @@ class GameConsumer(WebsocketConsumer):
         obj = json.loads(text_data)
         player = players[self.scope["session"]["player"]]
         if obj["action"] == "move":
-            player.x += obj["deltaX"]
-            player.y += obj["deltaY"]
+            new_x = player.x + obj["deltaX"]
+            new_y = player.y + obj["deltaY"]
+            player.x = max(min(new_x, map_width / 2 - char_size / 2), -map_width / 2 + char_size / 2)
+            player.y = max(min(new_y, map_height / 2 - char_size / 2), -map_height / 2 + char_size / 2)
+
         elif obj["action"] == "fire":
             target = get_target(player, obj["rotation"])
             if target is not None:
@@ -47,6 +51,8 @@ class GameConsumer(WebsocketConsumer):
                     player.score -= bot_kill
                     database_sync_to_async(updateScore(player.score, self.scope["session"]["name"]))
                     del bots[target.uid]
+                    new_c = Character(map_width, map_height, rand, max_id, speed, False)
+                    bots[target.uid] = new_c
 
         # Receive message from room group
 

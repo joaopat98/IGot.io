@@ -9,6 +9,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name="user_profile")
     phone_number = models.CharField(max_length=20, blank=True)
     max_score = models.IntegerField(default=0)
+    current_skin = models.CharField(max_length=100, default="default")
 
     def serialize(self):
         p = self
@@ -18,19 +19,22 @@ class Profile(models.Model):
             "username": u.username,
             "phone_number": p.phone_number,
             "max_score": p.max_score,
+            "current_skin": p.current_skin
         }
 
 
 class Skin(models.Model):
-    id = models.IntegerField(primary_key=True)
     profile = models.ManyToManyField(Profile, through="UserSkins")
     path_png = models.CharField(max_length=240)
+    slang = models.CharField(max_length=100)
 
     def serialize(self):
         s = self
         return {
+
             "skin_id": s.id,
             "path": s.path_png,
+            "slang": s.slang
         }
 
 

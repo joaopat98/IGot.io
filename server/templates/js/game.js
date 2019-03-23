@@ -1,63 +1,72 @@
 "use strict";
 
-var queue, stage, arena, time, player, score;
+var queue, stage, arena, time, player, score, leaderboard;
 var mapWidth = 3000, mapHeight = 3000;
 let ws;
 
-function loadImages() {
+function loadImages(data, onComplete) {
     queue = new createjs.LoadQueue(false, null, true);
-    queue.on("complete", init, this);
+    queue.on("complete", onComplete, this);
     queue.loadFile({src: "static/res/tile.png", crossOrigin: true, id: "tile"});
-    queue.loadFile({src: "static/res/skin_warrior.png", crossOrigin: true, id: "warrior"});
     queue.loadFile({src: "static/res/laser.png", crossOrigin: true, id: "laser"});
+    for(let skin in data) {
+        console.log("static/res/skins/" + data[skin]);
+        queue.loadFile({src:"static/res/skins/" + data[skin], crossOrigin: true, id:skin});
+    }
 }
 
 function init() {
     Request.post("api/load", {}).then(response => {
         response.json().then(data => {
-            stage = new createjs.Stage("canvas");
-            let charSize = data.charSize;
-            player = new Character(data.playerX, data.playerY, queue.getResult("warrior"), data.charSize, queue.getResult("laser"), 595, 64, true, data.mapWidth, data.mapHeight, data.id, data.speed);
-            arena = new Arena(queue.getResult("tile"), player, time, data.mapWidth, data.mapHeight);
-            arena.x = window.innerWidth / 2;
-            arena.y = window.innerHeight / 2;
-            stage.addChild(arena);
-            createScore();
-            stage.addChild(score);
-            config();
-            window.addEventListener("keydown", keyHandler);
-            window.addEventListener("keyup", keyHandler);
-            ws = new WebSocket("ws://" + window.location.host + "/ws/group");
-            ws.onmessage = message => {
-                let newData = JSON.parse(message.data);
-                newData.chars.forEach(char => {
-                    if (arena.chars.hasOwnProperty(char.id)) {
-                        if (char.id === player.id) {
-                            player.score = char.score;
-                            scoreUpdate();
-                            arena.player.x = char.x;
-                            arena.player.y = char.y;
+            loadImages(data.skins, () => {
+                stage = new createjs.Stage("canvas");
+                player = new Character(data.playerX, data.playerY, queue.getResult(data.playerSkin), data.charSize, queue.getResult("laser"), 595, 64, data.fov, true, data.mapWidth, data.mapHeight, data.id, data.speed);
+                arena = new Arena(queue.getResult("tile"), player, time, data.mapWidth, data.mapHeight);
+                arena.x = window.innerWidth / 2;
+                arena.y = window.innerHeight / 2;
+                stage.addChild(arena);
+                leaderboard = new LeaderBoard(300, 10);
+                leaderboard.x = window.innerWidth - 300;
+                createScore();
+                stage.addChild(leaderboard);
+                stage.addChild(score);
+                config();
+                window.addEventListener("keydown", keyHandler);
+                window.addEventListener("keyup", keyHandler);
+                ws = new WebSocket("ws://" + window.location.host + "/ws/group");
+                ws.onmessage = message => {
+                    let newData = JSON.parse(message.data);
+                    newData.chars.forEach(char => {
+                        if (arena.chars.hasOwnProperty(char.id)) {
+                            if (char.id === player.id) {
+                                player.score = char.score;
+                                scoreUpdate();
+                                arena.player.x = char.x;
+                                arena.player.y = char.y;
+                            } else {
+                                let b = arena.chars[char.id];
+                                b.x = char.x;
+                                b.y = char.y;
+                            }
                         } else {
-                            let b = arena.chars[char.id];
-                            b.x = char.x;
-                            b.y = char.y;
+                            let c = new Character(char.x, char.y, queue.getResult(char.skin), data.charSize, undefined, undefined, undefined, 0, false, data.mapWidth, data.mapHeight, char.id, data.speed);
+                            arena.chars[char.id] = c;
+                            arena.addChild(c);
                         }
-                    } else {
-                        let c = new Character(char.x, char.y, queue.getResult("warrior"), data.charSize, undefined, undefined, undefined, false, data.mapWidth, data.mapHeight, char.id, data.speed);
-                        arena.chars[char.id] = c;
-                        arena.addChild(c);
-                    }
-                });
-                console.log(newData.chars);
-                console.log(arena.chars);
+                    });
+                    console.log(newData.chars);
+                    console.log(arena.chars);
 
-                for(let char in arena.chars) {
-                    if (newData.chars.find(c => c.id == char) === undefined) {
-                        arena.removeChild(arena.chars[char]);
-                        delete arena.chars[char]
+                    leaderboard.update(newData.leaderboard);
+
+                    for (let char in arena.chars) {
+                        if (newData.chars.find(c => c.id == char) === undefined) {
+                            arena.removeChild(arena.chars[char]);
+                            delete arena.chars[char]
+                        }
                     }
                 }
-            }
+            });
         });
     });
 
@@ -99,16 +108,15 @@ function keyHandler(ev) {
     }
 }
 
-function leaderboard(){
-}
 
-function createScore(){
+function createScore() {
     score = new createjs.Text("Own score:" + player.score, "20px Arial", "#000000");
     console.log(score.getBounds().width);
-    score.x = stage.canvas.width - score.getBounds().width - 5;
-    score.y = stage.canvas.height - score.getBounds().height - 5;
+    score.x = window.innerWidth - score.getBounds().width - 10;
+    score.y = leaderboard.getBounds().height + 5;
 }
 
-function scoreUpdate(){
+function scoreUpdate() {
     score.text = "Own score:" + player.score;
+    score.x = window.innerWidth - score.getBounds().width - 10;
 }

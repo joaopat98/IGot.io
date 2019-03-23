@@ -1,7 +1,7 @@
 "use strict";
 
 class Character extends createjs.Container {
-    constructor(x, y, sprite, charSize, laserSprite, laserWidth, laserHeight, isPlayer, mapWidth, mapHeight, id, speed) {
+    constructor(x, y, sprite, charSize, laserSprite, laserWidth, laserHeight, fov, isPlayer, mapWidth, mapHeight, id, speed) {
         super();
         this.id = id;
         this.score = 0;
@@ -48,7 +48,7 @@ class Character extends createjs.Container {
                 }
             });
             this.laserSprite = new createjs.Sprite(laserSpriteSheet, "idle");
-            this.laserSprite.scale = 0.50;
+            this.laserSprite.scale = fov / (laserWidth + this.height);
             this.addChild(this.laserSprite);
         }
     }

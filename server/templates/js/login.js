@@ -19,9 +19,7 @@ let submit = () => {
 
             });
         } else {
-            response.json().then(data => {
-                window.location.assign(window.location.origin);
-            });
+            window.location.assign(window.location.origin);
         }
     });
 };

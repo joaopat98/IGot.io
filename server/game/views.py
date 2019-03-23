@@ -6,7 +6,7 @@ from django.shortcuts import render
 from .models import Score
 from .forms import UserCreationForm, ProfileForm
 from .data import *
-from . import  mbway_api
+from . import mbway_api
 
 # Create your views here.
 from .data import new_player
@@ -60,17 +60,23 @@ def login_session(request):
 
 
 def join(request):
-    request.session["name"] = request.POST["name"]
+    if request.user.is_authenticated:
+        request.session["name"] = request.user.username
+    else:
+        request.session["name"] = request.POST["name"]
     score = Score.objects.filter(name=request.POST["name"]).first()
     if score is None:
         Score.objects.create(name=request.POST["name"])
-    player = new_player(request.POST["name"])
+    player = new_player(request.session["name"], request.user)
     request.session["player"] = player.uid
     return HttpResponse()
 
 
 def load(request):
     player = players[request.session["player"]]
+    skins = {}
+    for skin in Skin.objects.all():
+        skins[skin.slang] = skin.path_png
     return JsonResponse({
         "playerX": player.x,
         "playerY": player.y,
@@ -79,7 +85,10 @@ def load(request):
         "mapHeight": map_height,
         "charSize": char_size,
         "fov": fov,
-        "speed": speed
+        "speed": speed,
+        "playerSkin": player.skin,
+        "skins": skins
+
     }, safe=False)
 
 
@@ -88,8 +97,14 @@ def phone_number_payment(request):
         identifier = request.POST["identifier"]
         number = request.POST["number"]
         value = request.POST["value"]
-        data = {"identifier":identifier,"number":number,"value":value}
+        data = {"identifier": identifier, "number": number, "value": value}
         mbway_api.phone_number_option(data)
         return HttpResponse()
     else:
         return HttpResponseNotAllowed("Method not Allowed")
+
+
+def qr_code_payment(request):
+    data = mbway_api.generate("20")
+    return JsonResponse(data, safe=False)
+    # chama inquiry
