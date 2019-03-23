@@ -6,6 +6,7 @@ from django.shortcuts import render
 from .models import Score
 from .forms import UserCreationForm, ProfileForm
 from .data import *
+import mbway_api
 
 # Create your views here.
 from .data import new_player
@@ -74,3 +75,9 @@ def join(request):
         "charSize": char_size,
         "speed": speed
     }, safe=False)
+
+
+def phone_number_payment(request):
+    data = {"identifier":"351","number":"910021662","value":"20"}
+    mbway_api.phone_number_option(data)
+    return HttpResponse()

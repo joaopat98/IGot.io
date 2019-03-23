@@ -1,20 +1,19 @@
 import http.client
 import json
+import ssl
 
 #numero: /purchase -> recebe transactionToken -> /inquiry com transactionToken
 #QR: /generate -> recebe qrCodeImage em base64 e qrCodeToken -> /inquiry com qrCodeToken -> Recebe qrCodePaymentToken -> /purchase com qrCodePaymentToken -> recebe statusCode = APPR
 	
+
+def fg():
+	print("asdadasd")
+
 def check_status_code(code):
 	if code == "000":
 		return True
 	else:
 		return False
-
-def QR_code_option():
-	generate(value)
-
-def phone_number_option():
-	purchase(identifier, number, value)
 
 def generate(value):
 	conn = http.client.HTTPSConnection("site1.sibsapimarket.com:8444")
@@ -99,6 +98,7 @@ def inquiryQR(qrCodeToken):
 
 
 def inquiry(transactionToken):
+	print("entrou inquiry")
 	flag = False
 	conn = http.client.HTTPSConnection("site1.sibsapimarket.com:8444")
 	payload = "{\"transactionTokens\":[\""+transactionToken+"\"]}"
@@ -172,6 +172,7 @@ def purchaseQR(qrCodePaymentToken):
 
 
 def purchase(identifier,number,value):
+	print("entrou purchase com identifier="+identifier+" number="+number+" e value="+value)
 	conn = http.client.HTTPSConnection("site1.sibsapimarket.com:8444")
 	payload = "{\"customer\":{\"customerIdentifier\":\""+identifier+"#"+number+"\"},\"amount\":{\"value\":"+value+",\"description\":\"Microtransaction igot.io\"}}"
 	
@@ -182,6 +183,8 @@ def purchase(identifier,number,value):
 	}
 
 	conn.request("POST", "/pixelscamp/apimarket/mbwaypurchases/mbwayid-pixelscamp/v1/purchase", payload, headers)
+
+	print("passou o request")
 
 	res = conn.getresponse()
 	data = res.read()
@@ -195,7 +198,8 @@ def purchase(identifier,number,value):
 		print("Erro interno")
 
 
-def checkMBWay(identifier,number):
+def checkMBWay(identifier,number,value):
+	print("entrou checkMBWay com identifier="+identifier+" number="+number+" e value="+value)
 	conn = http.client.HTTPSConnection("site1.sibsapimarket.com:8444")
 	
 	payload = "{\"customers\":[{\"identifier\":\""+identifier+"#"+number+"\"}]}"
@@ -219,8 +223,13 @@ def checkMBWay(identifier,number):
 		if not data["return"]["customers"]:
 			print("Nao tem MBWAY")
 		else:
-			purchase("351","910021662","20")
+			purchase(identifier,number,value)
 	else:
 		print("Erro interno")
 
-main()
+def QR_code_option():
+	generate(value)
+
+def phone_number_option(data):
+	checkMBWay(data["identifier"], data["number"], data["value"])
+
