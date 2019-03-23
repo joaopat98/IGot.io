@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from django.http import JsonResponse, HttpResponseNotAllowed, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 
-from .models import Score
+from .models import Score, UserSkins
 from .forms import UserCreationForm, ProfileForm
 from .data import *
 from . import mbway_api
@@ -36,6 +36,7 @@ def register(request):
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.save()
+            UserSkins.objects.create(profile=profile,skin=Skin.objects.filter(slang="default").first())
             return JsonResponse(user.id, safe=False)
         else:
             return JsonResponse(error_dict(user_form, profile_form, errors), status=400)
@@ -64,9 +65,9 @@ def join(request):
         request.session["name"] = request.user.username
     else:
         request.session["name"] = request.POST["name"]
-    score = Score.objects.filter(name=request.POST["name"]).first()
+    score = Score.objects.filter(name=request.session["name"]).first()
     if score is None:
-        Score.objects.create(name=request.POST["name"])
+        Score.objects.create(name=request.session["name"])
     player = new_player(request.session["name"], request.user)
     request.session["player"] = player.uid
     return HttpResponse()
@@ -99,6 +100,8 @@ def phone_number_payment(request):
         value = request.POST["value"]
         data = {"identifier": identifier, "number": number, "value": value}
         code = mbway_api.phone_number_option(data)
+        if code == 200:
+            UserSkins.objects.create(profile=request.user.user_profile,skin=Skin.objects.filter(slang=request.POST["skin"]).first())
         return HttpResponse(status=code)
     else:
         return HttpResponseNotAllowed("Method not Allowed")

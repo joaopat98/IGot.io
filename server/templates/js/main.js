@@ -20,9 +20,10 @@ let submit = () => {
 
 
 window.onload = () => {
+    window.addEventListener("click", playMenuSong);
+
+    document.body.click();
     // handler for fixing suspended audio context in Chrome
-
-
     try {
         if (createjs.WebAudioPlugin.context.state === "suspended") {
             createjs.WebAudioPlugin.context.resume();
@@ -34,18 +35,15 @@ window.onload = () => {
         console.error("There was an error while trying to resume the SoundJS Web Audio context...");
         console.error(e);
     }
-    window.addEventListener("click", playMenuSong);
-
-
 
 };
 
 window.addEventListener("load", () => {
-    document.getElementById("username_box").onchange = ev => {
-        input["name"] = ev.currentTarget.value;
-    };
-
-    document.body.click();
+    if (document.getElementById("username_box") != undefined) {
+        document.getElementById("username_box").onchange = ev => {
+            input["name"] = ev.currentTarget.value;
+        };
+    }
 });
 
 function loadMusic() {

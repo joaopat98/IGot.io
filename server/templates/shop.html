@@ -11,71 +11,69 @@
 </head>
 <body>
 <div>
-    <div class="container" align="center" style="background-color: rgba(255, 255, 255, .7); border-top-left-radius: 15px; border-top-right-radius: 15px;">
+    <div class="container" align="center"
+         style="background-color: rgba(255, 255, 255, .7); border-top-left-radius: 15px; border-top-right-radius: 15px;">
         <div class="row" style="margin-top: 60px; background-color: #2A5A83; border-radius: inherit;">
             <div class="col">
                 <h1 style="color: white !important; margin-bottom: 15px; margin-top: 15px;">Shop</h1>
             </div>
         </div>
         <div class="row" style="">
-            <div class="col-4 my-auto">
-            	<div class="row">
-            		<div class="col">
-            			<img src="/static/res/skin_warrior.png" class="shop-skin">
-            		</div>
-            	</div>
-            	<div class="row">
-            		<div class="col">
-            			<button class="primary-btn" onclick="updateCart('warrior')" style="max-width: 84px;" data-toggle="modal" data-target="#pay-modal">Buy - 3€</button>
-            		</div>
-            	</div>
-            </div>
-            <div class="col-4 my-auto">
-            	<div class="row">
-            		<div class="col">
-            			<img src="/static/res/skin_lil.png" class="shop-skin">
-            		</div>
-            	</div>
-            	<div class="row">
-            		<div class="col">
-            			<button class="primary-btn" onclick="updateCart('lil')" style="max-width: 84px;" data-toggle="modal" data-target="#pay-modal">Buy - 3€</button>
-            		</div>
-            	</div>
-            </div>
-            <div class="col-4 my-auto">
-            	<div class="row">
-            		<div class="col">
-            			<img src="/static/res/skin_mr_t.png" class="shop-skin">
-            		</div>
-            	</div>
-            	<div class="row">
-            		<div class="col">
-            			<button class="primary-btn" onclick="updateCart('mr_t')" style="max-width: 84px;" data-toggle="modal" data-target="#pay-modal">Buy - 3€</button>
-            		</div>
-            	</div>
-            </div>
+            {% for skin, path in skin_list.items %}
+                <div class="col-4 my-auto">
+                    <div class="row">
+                        <div class="col">
+                            <img src="/static/res/skins/{{ path }}" class="shop-skin">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            {% if skin not in user_skins %}
+                                <button class="primary-btn" onclick="updateCart('{{ skin }}')" style="max-width: 84px;"
+                                        data-toggle="modal" data-target="#pay-modal">Buy - 1€
+                                </button>
+                            {% elif request.user.user_profile.current_skin == skin %}
+                                <button class="primary-btn" style="max-width: 84px;">Current</button>
+                            {% else %}
+                                <button class="primary-btn"
+                                        onclick="window.location.assign(window.location.origin + '/select/{{ skin }}')"
+                                        style="max-width: 84px;">Select
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6" align="left">
+            <a href="/">
+                <button class="primary-btn">Back</button>
+            </a>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="pay-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <a href="" id="mobile">Pay with mobile</a><br>
-        <a href="">Pay by qrcode</a>
-      </div>
-      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
+<div class="modal fade" id="pay-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <a href="" id="mobile">Pay with mobile</a><br>
+                <a href="">Pay by qrcode</a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 </body>
 </html>
