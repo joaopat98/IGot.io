@@ -84,6 +84,12 @@ def load(request):
 
 
 def phone_number_payment(request):
-    data = {"identifier":"351","number":"910021662","value":"20"}
-    mbway_api.phone_number_option(data)
-    return HttpResponse()
+    if request.method == "POST":
+        identifier = request.POST["identifier"]
+        number = request.POST["number"]
+        value = request.POST["value"]
+        data = {"identifier":identifier,"number":number,"value":value}
+        mbway_api.phone_number_option(data)
+        return HttpResponse()
+    else:
+        return HttpResponseNotAllowed("Method not Allowed")
