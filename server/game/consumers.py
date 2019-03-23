@@ -53,8 +53,8 @@ class GameConsumer(WebsocketConsumer):
                     database_sync_to_async(updateScore(player.score, self.scope["session"]["name"]))
                     del bots[target.uid]
                     new_c = Character(map_width, map_height, rand, max_id, speed, False)
+                    bots[max_id] = new_c
                     max_id += 1
-                    bots[target.uid] = new_c
 
         # Receive message from room group
 

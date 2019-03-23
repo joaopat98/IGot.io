@@ -12,7 +12,7 @@ from .models import Skin
 
 players = {}
 bots = {}
-NUM_BOTS = 15
+NUM_BOTS = 50
 max_id = 0
 TIME_DIV = 1000
 epoch = datetime.datetime.utcfromtimestamp(0)
@@ -84,7 +84,7 @@ def synchronized(func):
 def new_player(name, user):
     global max_id
     if user.is_authenticated:
-        c = Character(1000, 1000, rand, max_id, 1, True, name, user.current_skin)
+        c = Character(1000, 1000, rand, max_id, 1, True, name, user.user_profile.current_skin)
     else:
         c = Character(1000, 1000, rand, max_id, 1, True, name)
     players[c.uid] = c

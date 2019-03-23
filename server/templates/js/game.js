@@ -1,6 +1,6 @@
 "use strict";
 
-var queue, stage, arena, time, player, score, leaderboard;
+var queue, stage, arena, time, player, score, leaderboard, numberPlayers;
 var mapWidth = 3000, mapHeight = 3000;
 let ws;
 
@@ -28,8 +28,10 @@ function init() {
                 leaderboard = new LeaderBoard(300, 10);
                 leaderboard.x = window.innerWidth - 300;
                 createScore();
+                createNumberP();
                 stage.addChild(leaderboard);
                 stage.addChild(score);
+                stage.addChild(numberPlayers);
                 config();
                 window.addEventListener("keydown", keyHandler);
                 window.addEventListener("keyup", keyHandler);
@@ -58,6 +60,7 @@ function init() {
                     console.log(arena.chars);
 
                     leaderboard.update(newData.leaderboard);
+                    numberPUpdate(newData.number_players);
 
                     for (let char in arena.chars) {
                         if (newData.chars.find(c => c.id == char) === undefined) {
@@ -110,7 +113,7 @@ function keyHandler(ev) {
 
 
 function createScore() {
-    score = new createjs.Text("Own score:" + player.score, "20px Arial", "#000000");
+    score = new createjs.Text("Own score: " + player.score, "20px Arial", "#000000");
     console.log(score.getBounds().width);
     score.x = window.innerWidth - score.getBounds().width - 10;
     score.y = leaderboard.getBounds().height + 5;
@@ -119,4 +122,15 @@ function createScore() {
 function scoreUpdate() {
     score.text = "Own score:" + player.score;
     score.x = window.innerWidth - score.getBounds().width - 10;
+}
+
+function createNumberP() {
+    numberPlayers = new createjs.Text("Number of players: " + 0, "20px Arial", "#000000");
+    console.log(numberPlayers.getBounds().width);
+    numberPlayers.x = window.innerWidth/2 - numberPlayers.getBounds().width/2;
+    numberPlayers.y = numberPlayers.getBounds().height/2;
+}
+
+function numberPUpdate(number) {
+    numberPlayers.text = "Number of players: " + number;
 }
