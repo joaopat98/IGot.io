@@ -27,7 +27,7 @@ urlpatterns = [
     path("login", TemplateView.as_view(template_name="login.html")),
     path("play", TemplateView.as_view(template_name="game.html")),
     path("shop", TemplateView.as_view(template_name="shop.html")),
+    path('pay/mobile/<slug:skin>', views.pay_mobile),
     url(r'^', views.homepage),
-    url(r'^user/(?P<skin>\w{0,50})/$', views.pay_mobile),
     #url(r'^', ensure_csrf_cookie(TemplateView.as_view(template_name="index.html"))),
 ]

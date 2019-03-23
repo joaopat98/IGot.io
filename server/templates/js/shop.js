@@ -1,3 +1,4 @@
 function updateCart(skin) {
-	$(".mobile").attr('id', skin);
+	$("#mobile").attr("href", "pay/mobile/" + skin);
+	//$("#qrcode").attr("href", "pay/mobile/" + skin);
 }
