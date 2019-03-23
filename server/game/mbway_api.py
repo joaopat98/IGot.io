@@ -1,6 +1,6 @@
 import http.client
 import json
-import ssl
+import time
 
 #numero: /purchase -> recebe transactionToken -> /inquiry com transactionToken
 #QR: /generate -> recebe qrCodeImage em base64 e qrCodeToken -> /inquiry com qrCodeToken -> Recebe qrCodePaymentToken -> /purchase com qrCodePaymentToken -> recebe statusCode = APPR
@@ -10,6 +10,7 @@ def fg():
 	print("asdadasd")
 
 def check_status_code(code):
+	print(code)
 	if code == "000":
 		return True
 	else:
@@ -17,7 +18,7 @@ def check_status_code(code):
 
 def generate(value):
 	conn = http.client.HTTPSConnection("site1.sibsapimarket.com:8444")
-	payload = "{\"amount\":{\"value\":23.05,\"description\":\"Microtransaction igot.io\"}}"
+	payload = "{\"amount\":{\"value\":" + value + ",\"description\":\"Microtransaction igot.io\"}}"
 	
 	headers = {
     'x-ibm-client-id': "784d3d84-dd3c-4fb4-8157-dbf4e947fe3b",
@@ -35,13 +36,16 @@ def generate(value):
 
 	if data["statusCode"]=="APPR":
 		return data
+	
 	else:
 		print("Erro interno")
 
 def inquiryQR(qrCodeToken):
 	flag=False
 	conn = http.client.HTTPSConnection("site1.sibsapimarket.com:8444")
+
 	payload = "{\"qrCodeToken\":\""+qrCodeToken+"\"}"
+
 
 	headers = {
     'x-ibm-client-id': "784d3d84-dd3c-4fb4-8157-dbf4e947fe3b",
@@ -49,46 +53,16 @@ def inquiryQR(qrCodeToken):
     'accept': "application/json"
     }
 
-	conn.request("POST", "/pixelscamp/apimarket/mbwaypurchases/qrcode-pixelscamp/v1/inquiry", payload, headers)
 
-	res = conn.getresponse()
-	data = res.read()
+	while(flag==False):
+		conn.request("POST", "/pixelscamp/apimarket/mbwaypurchases/qrcode-pixelscamp/v1/inquiry", payload, headers)
+		res = conn.getresponse()
+		data = res.read()
+		data = data.decode("utf-8")
+		data = json.loads(data)
+		if data["statusCode"]=="000":
+			return purchaseQR(data["qrCodePaymentToken"])
 
-	data = data.decode("utf-8")
-	data = json.loads(data)
-
-	if check_status_code(data["statusCode"]):
-		while(flag==False):
-			conn.request("POST", "/pixelscamp/apimarket/mbwaypurchases/mbwayid-pixelscamp/v1/inquiry", payload, headers)
-
-			res = conn.getresponse()
-			data = res.read()
-
-			data = data.decode("utf-8")
-			data = json.loads(data)
-
-			transactionStatusCode = data["transactions"][0]["transactionStatusCode"]
-			if transactionStatusCode == "4":
-				flag = True
-				print("Successful Transaction")
-			elif transactionStatusCode == "5":
-				flag = True
-				print("Canceled: Financial operation canceled by user ")
-			elif transactionStatusCode == "9":
-				flag = True
-				print("Registered: Financial operation registered to initiate authorization process")
-				#Expired: Financial operation expired 
-			elif transactionStatusCode == "-1":
-				flag = True
-				print("Registered: Financial operation registered to initiate authorization process")
-				#Error: Financial operation ID not found
-
-		if check_status_code(data["statusCode"]):
-			purchaseQR(data["qrCodePaymentToken"])
-		else:
-			print("Erro interno")
-	else:
-		print("Erro interno")
 
 
 def inquiry(transactionToken):
@@ -152,10 +126,12 @@ def purchaseQR(qrCodePaymentToken):
 	data = data.decode("utf-8")
 	data = json.loads(data)
 
+	print(data)
+
 	if data["statusCode"]=="APPR":
-		print("Transição efetuada")
+		return 200
 	else:
-		print("Erro interno")
+		return 500
 
 
 

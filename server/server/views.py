@@ -32,8 +32,12 @@ def select_skin(request, skin):
 
 @login_required
 def pay_mobile(request, skin):
-    data = {'value': 1, 'skin': skin}
-    return render(request, 'pay_mobile.html', data);
+	data = {'value': 1};
+	return render(request, 'pay_mobile.html', data);
+
+def pay_qrcode(request, skin):
+	data = {'value': 1};
+	return render(request, 'pay_qrcode.html', data);
 
 @login_required
 def logout_view(request):

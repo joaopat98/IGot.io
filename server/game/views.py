@@ -108,6 +108,14 @@ def phone_number_payment(request):
 
 
 def qr_code_payment(request):
-    data = mbway_api.generate("20")
-    return JsonResponse(data, safe=False)
-    # chama inquiry
+    if request.method == "POST":
+        data = mbway_api.generate(request.POST["value"])
+        return JsonResponse(data, safe=False)
+    else:
+        return HttpResponseNotAllowed("Method not Allowed")
+
+def qr_inquiry(request):
+    if request.method == "POST":
+        return HttpResponse(mbway_api.inquiryQR(request.POST["qrCodeToken"]))
+    else:
+        return HttpResponseNotAllowed("Method not Allowed")

@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Checkout - igot.io</title>
+	<script src="{% static 'js/jquery-3.3.1.js' %}"></script>
+	<script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/request.js' %}"></script>
+	<script type="text/javascript">
+		function call(value) {
+			Request.post("api/payQrCode", {'value': value}).then(response => {
+				if (response.status === 200) {
+					response.json().then(data => {
+						console.log(data);
+						$("#decoder").attr("src", "data:image/png;base64, " + data["qrCodeImage"])
+						qrCodeToken = data['qrCodeToken']
+						Request.post("api/inquiry", {'qrCodeToken': qrCodeToken});
+					});
+				}
+			})
+		}
+	</script>
+</head>
+<body onload="call('{{ value }}')">
+
+	<img src="" id="decoder" />
+
+
+</body>
+</html>
