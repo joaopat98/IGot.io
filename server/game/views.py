@@ -93,3 +93,8 @@ def phone_number_payment(request):
         return HttpResponse()
     else:
         return HttpResponseNotAllowed("Method not Allowed")
+
+def qr_code_payment(request):
+    data = mbway_api.generate("20")
+    return JsonResponse(data,safe=False)
+    #chama inquiry
