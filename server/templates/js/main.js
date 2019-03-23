@@ -18,8 +18,11 @@ let submit = () => {
     });
 };
 
+
 window.onload = () => {
     // handler for fixing suspended audio context in Chrome
+
+
     try {
         if (createjs.WebAudioPlugin.context.state === "suspended") {
             createjs.WebAudioPlugin.context.resume();
@@ -32,14 +35,20 @@ window.onload = () => {
         console.error(e);
     }
     window.addEventListener("click", playMenuSong);
-    document.body.click();
 
-	document.getElementById("username_box").onchange = ev => {
-		input["name"] = ev.currentTarget.value;
-	};
+
+
 };
 
-function loadMusic(){
+window.addEventListener("load", () => {
+    document.getElementById("username_box").onchange = ev => {
+        input["name"] = ev.currentTarget.value;
+    };
+
+    document.body.click();
+});
+
+function loadMusic() {
     /*Music/Sound Stuff*/
     createjs.Sound.alternateExtensions = ["mp3"];
     createjs.Sound.on("fileload", playMenuSong);
@@ -48,7 +57,7 @@ function loadMusic(){
 
 }
 
-function playMenuSong(){
+function playMenuSong() {
     var instance = createjs.Sound.play("menuMusic");
     instance.on("complete", playMenuSong);
 }
