@@ -9,9 +9,9 @@ function loadImages(data, onComplete) {
     queue.on("complete", onComplete, this);
     queue.loadFile({src: "static/res/tile.png", crossOrigin: true, id: "tile"});
     queue.loadFile({src: "static/res/laser.png", crossOrigin: true, id: "laser"});
-    for(let skin in data) {
+    for (let skin in data) {
         console.log("static/res/skins/" + data[skin]);
-        queue.loadFile({src:"static/res/skins/" + data[skin], crossOrigin: true, id:skin});
+        queue.loadFile({src: "static/res/skins/" + data[skin], crossOrigin: true, id: skin});
     }
 }
 
@@ -127,10 +127,18 @@ function scoreUpdate() {
 function createNumberP() {
     numberPlayers = new createjs.Text("Number of players: " + 0, "20px Arial", "#000000");
     console.log(numberPlayers.getBounds().width);
-    numberPlayers.x = window.innerWidth/2 - numberPlayers.getBounds().width/2;
-    numberPlayers.y = numberPlayers.getBounds().height/2;
+    numberPlayers.x = window.innerWidth / 2 - numberPlayers.getBounds().width / 2;
+    numberPlayers.y = numberPlayers.getBounds().height / 2;
 }
 
 function numberPUpdate(number) {
     numberPlayers.text = "Number of players: " + number;
+}
+
+function notif(msg) {
+    let text = new createjs.Text(msg, "33px Arial", "#000000");
+    text.x = window.innerWidth / 2 - text.getBounds().width / 2;
+    text.y = 30;
+    stage.addChild(text);
+    window.setInterval(() => stage.removeChild(text), 1);
 }
