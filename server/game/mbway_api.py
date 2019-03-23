@@ -125,19 +125,13 @@ def inquiry(transactionToken):
 
 			transactionStatusCode = data["transactions"][0]["transactionStatusCode"]
 			if transactionStatusCode == "4":
-				flag = True
-				print("Successful Transaction")
+				return 200
 			elif transactionStatusCode == "5":
-				flag = True
-				print("Canceled: Financial operation canceled by user ")
+				return 401
 			elif transactionStatusCode == "9":
-				flag = True
-				print("Registered: Financial operation registered to initiate authorization process")
-				#Expired: Financial operation expired 
+				return 408
 			elif transactionStatusCode == "-1":
-				flag = True
-				print("Registered: Financial operation registered to initiate authorization process")
-				#Error: Financial operation ID not found
+				return 500
 
 def purchaseQR(qrCodePaymentToken):
 	conn = http.client.HTTPSConnection("site1.sibsapimarket.com:8444")
@@ -178,8 +172,6 @@ def purchase(identifier,number,value):
 
 	conn.request("POST", "/pixelscamp/apimarket/mbwaypurchases/mbwayid-pixelscamp/v1/purchase", payload, headers)
 
-	print("passou o request")
-
 	res = conn.getresponse()
 	data = res.read()
 
@@ -187,9 +179,9 @@ def purchase(identifier,number,value):
 	data = json.loads(data)
 
 	if check_status_code(data["statusCode"]):
-		inquiry(data["transactionToken"])
+		return inquiry(data["transactionToken"])
 	else:
-		print("Erro interno")
+		return 500
 
 
 def checkMBWay(identifier,number,value):
@@ -215,15 +207,15 @@ def checkMBWay(identifier,number,value):
 
 	if check_status_code(data["return"]["statusCode"]):
 		if not data["return"]["customers"]:
-			print("Nao tem MBWAY")
+			return 400
 		else:
-			purchase(identifier,number,value)
+			return purchase(identifier,number,value)
 	else:
-		print("Erro interno")
+		return 500
 
 def QR_code_option():
 	generate(value)
 
 def phone_number_option(data):
-	checkMBWay(data["identifier"], data["number"], data["value"])
+	return checkMBWay(data["identifier"], data["number"], data["value"])
 
