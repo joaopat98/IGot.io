@@ -23,9 +23,18 @@ class GameConsumer(WebsocketConsumer):
     # Receive message from WebSocket
     def receive(self, text_data):
         obj = json.loads(text_data)
+        player = players[self.scope["session"]["player"]]
         if obj["action"] == "move":
-            players[self.scope["session"]["player"]].x += obj["deltaX"]
-            players[self.scope["session"]["player"]].y += obj["deltaY"]
+            player.x += obj["deltaX"]
+            player.y += obj["deltaY"]
+        elif obj["action"] == "fire":
+            target = get_target(player, obj["rotation"])
+            if target is not None:
+                if target.is_player:
+                    del players[target.uid]
+                else:
+                    del bots[target.uid]
+
 
         # Receive message from room group
 
