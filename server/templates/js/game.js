@@ -13,7 +13,7 @@ function loadImages() {
 }
 
 function init() {
-    Request.post("api/join", {}).then(response => {
+    Request.post("api/load", {}).then(response => {
         response.json().then(data => {
             stage = new createjs.Stage("canvas");
             let charSize = data.charSize;

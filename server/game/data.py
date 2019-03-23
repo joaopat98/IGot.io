@@ -22,6 +22,7 @@ old_t = (datetime.datetime.now() - epoch).total_seconds()
 speed = 250
 fov = 600
 baseY = 0
+bot_kill = 1
 
 
 def mod(a, n):
@@ -91,7 +92,7 @@ class Character:
         self.x = (random.random() - 0.5) * max_x
         self.y = (random.random() - 0.5) * max_y
         self.name = name
-        self.score = 0
+        self.score = 10
         self.max_x = max_x
         self.max_y = max_y
         self.random = random
@@ -107,7 +108,7 @@ class Character:
     def reset(self):
         self.x = (self.random.random() - 0.5) * self.max_x
         self.y = (self.random.random() - 0.5) * self.max_y
-        self.score = 0
+        self.score = 10
 
     def update(self, t):
         valx = self.noiseX.noise2d(1, t + self.offsetX)
@@ -157,11 +158,15 @@ class Updater(Thread):
                 bot.update(secs)
             old_t = secs
             channel_layer = get_channel_layer()
+            player_list = list(players.values())
+            player_list.sort(key=lambda p: p.score, reverse=True)
+            selected = list(map(lambda p: {"name": p.name, "score": p.score}, player_list[:min(10, len(player_list))]))
             async_to_sync(channel_layer.group_send)("test", {
                 "type": "message",
                 "message": json.dumps({
                     "chars": list(map(lambda b: b.serialize(), bots.values())) +
-                             list(map(lambda p: p.serialize(), players.values()))
+                             list(map(lambda p: p.serialize(), players.values())),
+                    "leaderboard": selected
                 })
             })
 

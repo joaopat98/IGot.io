@@ -5,5 +5,6 @@ from .views import *
 urlpatterns = [
     path("join", join),
     path("login", login_session),
-    path("register", register)
+    path("register", register),
+    path("load", load)
 ]

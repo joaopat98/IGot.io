@@ -10,6 +10,7 @@
 	<script src="static/js/jquery-3.3.1.js"></script>
     <script src="static/js/bootstrap.js"></script>
     <script src="static/js/main.js"></script>
+    <script src="static/js/request.js"></script>
     <title>Home - igot.io</title>
 </head>
 <body>
@@ -21,7 +22,7 @@
         </div>
         <div class="row" style="margin-top: 100px; margin-bottom: 100px;">
             <div class="col-6" align="right">
-                <i class="fa fa-play" id="game-btn" style="margin-right: 30px"></i>
+                <i onclick="submit();" class="fa fa-play" id="game-btn" style="margin-right: 30px"></i>
             </div>
             <div class="col-6" align="left">
                 <i class="fa fa-question" id="game-btn" style="margin-left: 30px" data-toggle="modal" data-target="#help-dialog"></i>
@@ -29,7 +30,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <input id="username_box" type="text" class="textbox" name="username" placeholder="Username">
+                <input id="username_box" type="text" class="textbox" name="name" placeholder="Username">
             </div>
         </div>
         <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
