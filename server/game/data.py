@@ -141,7 +141,7 @@ class Character:
             "y": self.y,
             "id": self.uid,
             "skin": self.skin,
-            "score"
+            "score": self.score
         }
 
 
