@@ -60,11 +60,14 @@ def login_session(request):
 
 
 def join(request):
-    request.session["name"] = request.POST["name"]
+    if request.user.is_authenticated:
+        request.session["name"] = request.user.username
+    else:
+        request.session["name"] = request.POST["name"]
     score = Score.objects.filter(name=request.POST["name"]).first()
     if score is None:
         Score.objects.create(name=request.POST["name"])
-    player = new_player(request.POST["name"], request.user)
+    player = new_player(request.session["name"], request.user)
     request.session["player"] = player.uid
     return HttpResponse()
 
