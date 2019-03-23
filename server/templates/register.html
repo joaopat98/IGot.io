@@ -2,29 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Sign Up - igot.io</title>
+    <link rel="stylesheet" href="static/css/main.css">
+    <link rel="stylesheet" href="static/css/bootstrap.css">
     <script src="static/js/register.js"></script>
     <script src="static/js/request.js"></script>
 </head>
 <body>
-<div>
-    <label>Username*
-        <input name="username"/>
-    </label>
-    <label>Email*
-        <input name="email"/>
-    </label>
-    <label>Password*
-        <input name="password1" type="password"/>
-    </label>
-    <label>Confirm Password*
-        <input name="password2" type="password"/>
-    </label>
-    <label>Phone Number
-        <input name="phone_number"/>
-    </label>
-    <p> * Required </p>
-    <button onclick="submit();">Submit</button>
-</div>
+    <div class="container" align="center">
+        <div class="row" style="margin-top: 60px; margin-bottom: 50px;">
+            <div class="col">
+                <h1>Sign Up</h1>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col">
+                <input name="username" class="textbox" placeholder="Username"/>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col">
+                <input name="email" class="textbox" placeholder="Email"/>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col">
+                <input name="password1" type="password" class="textbox" placeholder="Password"/>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col">
+                <input name="password2" type="password" class="textbox" placeholder="Confirm Password"/>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 30px;">
+            <div class="col">
+                <input name="phone_number" class="textbox" placeholder="Phone Number"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <button class="primary-btn" onclick="submit();">Submit</button>      
+            </div>
+        </div>
+    </div>
 </body>
 </html>
