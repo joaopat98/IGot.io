@@ -34,8 +34,11 @@ class GameConsumer(WebsocketConsumer):
         obj = json.loads(text_data)
         player = players[self.scope["session"]["player"]]
         if obj["action"] == "move":
-            player.x += obj["deltaX"]
-            player.y += obj["deltaY"]
+            new_x = player.x + obj["deltaX"]
+            new_y = player.y + obj["deltaY"]
+            player.x = max(min(new_x, map_width / 2 - char_size / 2), -map_width / 2 + char_size / 2)
+            player.y = max(min(new_y, map_height / 2 - char_size / 2), -map_height / 2 + char_size / 2)
+
         elif obj["action"] == "fire":
             target = get_target(player, obj["rotation"])
             if target is not None:
