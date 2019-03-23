@@ -6,7 +6,7 @@ from django.shortcuts import render
 from .models import Score
 from .forms import UserCreationForm, ProfileForm
 from .data import *
-import mbway_api
+from . import  mbway_api
 
 # Create your views here.
 from .data import new_player
@@ -78,6 +78,7 @@ def load(request):
         "mapWidth": map_width,
         "mapHeight": map_height,
         "charSize": char_size,
+        "fov": fov,
         "speed": speed
     }, safe=False)
 
