@@ -7,9 +7,10 @@ let ws;
 function loadImages() {
     queue = new createjs.LoadQueue(false, null, true);
     queue.on("complete", init, this);
-    queue.loadFile({src: "static/res/tile.png", crossOrigin: true, id: "tile"});
-    queue.loadFile({src: "static/res/skin_warrior.png", crossOrigin: true, id: "warrior"});
-    queue.loadFile({src: "static/res/laser.png", crossOrigin: true, id: "laser"});
+    queue.loadFile({src: "static/res/tile.png", type:createjs.Types.IMAGE, crossOrigin: true, id: "tile"});
+    queue.loadFile({src: "static/res/skin_warrior.png", type:createjs.Types.IMAGE, crossOrigin: true, id: "warrior"});
+    queue.loadFile({src: "static/res/laser.png", type:createjs.Types.IMAGE, crossOrigin: true, id: "laser"});
+
 }
 
 function init() {

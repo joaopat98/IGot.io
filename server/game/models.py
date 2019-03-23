@@ -37,3 +37,8 @@ class Skin(models.Model):
 class UserSkins(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     skin = models.ForeignKey(Skin, on_delete=models.CASCADE)
+
+
+class Score(models.Model):
+    name = models.CharField(max_length=240)
+    score = models.IntegerField(default=0)

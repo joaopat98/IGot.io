@@ -1,6 +1,6 @@
 "use strict";
 
-var queue, stage, arena, time, player;
+var queue, stage, arena, time, player, score;
 var mapWidth = 3000, mapHeight = 3000;
 let ws;
 
@@ -13,7 +13,7 @@ function loadImages() {
 }
 
 function init() {
-    Request.post("api/join", {}).then(response => {
+    Request.post("api/load", {}).then(response => {
         response.json().then(data => {
             stage = new createjs.Stage("canvas");
             let charSize = data.charSize;
@@ -22,6 +22,8 @@ function init() {
             arena.x = window.innerWidth / 2;
             arena.y = window.innerHeight / 2;
             stage.addChild(arena);
+            createScore();
+            stage.addChild(score);
             config();
             window.addEventListener("keydown", keyHandler);
             window.addEventListener("keyup", keyHandler);
@@ -31,6 +33,8 @@ function init() {
                 newData.chars.forEach(char => {
                     if (arena.chars.hasOwnProperty(char.id)) {
                         if (char.id === player.id) {
+                            player.score = char.score;
+                            scoreUpdate();
                             arena.player.x = char.x;
                             arena.player.y = char.y;
                         } else {
@@ -93,4 +97,18 @@ function keyHandler(ev) {
     if (player.shootOnce == false && ev.type === "keyup" && ev.keyCode == 32) {
         arena.player.shootOnce = true;
     }
+}
+
+function leaderboard(){
+}
+
+function createScore(){
+    score = new createjs.Text("Own score:" + player.score, "20px Arial", "#000000");
+    console.log(score.getBounds().width);
+    score.x = stage.canvas.width - score.getBounds().width - 5;
+    score.y = stage.canvas.height - score.getBounds().height - 5;
+}
+
+function scoreUpdate(){
+    score.text = "Own score:" + player.score;
 }

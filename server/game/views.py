@@ -3,8 +3,10 @@ from django.forms import ModelForm
 from django.http import JsonResponse, HttpResponseNotAllowed, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 
+from .models import Score
 from .forms import UserCreationForm, ProfileForm
 from .data import *
+from . import  mbway_api
 
 # Create your views here.
 from .data import new_player
@@ -58,8 +60,17 @@ def login_session(request):
 
 
 def join(request):
-    player = new_player()
+    request.session["name"] = request.POST["name"]
+    score = Score.objects.filter(name=request.POST["name"]).first()
+    if score is None:
+        Score.objects.create(name=request.POST["name"])
+    player = new_player(request.POST["name"])
     request.session["player"] = player.uid
+    return HttpResponse()
+
+
+def load(request):
+    player = players[request.session["player"]]
     return JsonResponse({
         "playerX": player.x,
         "playerY": player.y,
@@ -67,5 +78,18 @@ def join(request):
         "mapWidth": map_width,
         "mapHeight": map_height,
         "charSize": char_size,
+        "fov": fov,
         "speed": speed
     }, safe=False)
+
+
+def phone_number_payment(request):
+    if request.method == "POST":
+        identifier = request.POST["identifier"]
+        number = request.POST["number"]
+        value = request.POST["value"]
+        data = {"identifier":identifier,"number":number,"value":value}
+        mbway_api.phone_number_option(data)
+        return HttpResponse()
+    else:
+        return HttpResponseNotAllowed("Method not Allowed")
