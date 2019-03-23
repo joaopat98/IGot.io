@@ -36,7 +36,7 @@ def register(request):
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.save()
-            UserSkins.objects.create(profile=profile,skin=Skin.objects.filter(slang="default").first())
+            UserSkins.objects.create(profile=profile, skin=Skin.objects.filter(slang="default").first())
             return JsonResponse(user.id, safe=False)
         else:
             return JsonResponse(error_dict(user_form, profile_form, errors), status=400)
@@ -101,7 +101,8 @@ def phone_number_payment(request):
         data = {"identifier": identifier, "number": number, "value": value}
         code = mbway_api.phone_number_option(data)
         if code == 200:
-            UserSkins.objects.create(profile=request.user.user_profile,skin=Skin.objects.filter(slang=request.POST["skin"]).first())
+            UserSkins.objects.create(profile=request.user.user_profile,
+                                     skin=Skin.objects.filter(slang=request.POST["skin"]).first())
         return HttpResponse(status=code)
     else:
         return HttpResponseNotAllowed("Method not Allowed")
@@ -114,8 +115,13 @@ def qr_code_payment(request):
     else:
         return HttpResponseNotAllowed("Method not Allowed")
 
+
 def qr_inquiry(request):
     if request.method == "POST":
-        return HttpResponse(mbway_api.inquiryQR(request.POST["qrCodeToken"]))
+        code = request.POST["qrCodeToken"]
+        if code == 200:
+            UserSkins.objects.create(profile=request.user.user_profile,
+                                     skin=Skin.objects.filter(slang=request.POST["skin"]).first())
+        return HttpResponse(mbway_api.inquiryQR(code))
     else:
         return HttpResponseNotAllowed("Method not Allowed")
