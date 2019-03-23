@@ -78,18 +78,20 @@ def synchronized(func):
 
 
 @synchronized
-def new_player():
+def new_player(name):
     global max_id
-    c = Character(1000, 1000, rand, max_id, 1, True)
+    c = Character(1000, 1000, rand, max_id, 1, True, name)
     players[c.uid] = c
     max_id += 1
     return c
 
 
 class Character:
-    def __init__(self, max_x, max_y, random, uid, speed, is_player):
+    def __init__(self, max_x, max_y, random, uid, speed, is_player, name=None):
         self.x = (random.random() - 0.5) * max_x
         self.y = (random.random() - 0.5) * max_y
+        self.name = name
+        self.score = 0
         self.max_x = max_x
         self.max_y = max_y
         self.random = random
@@ -102,9 +104,10 @@ class Character:
         self.speed = speed
         self.skin = rand.randint(0, 10)
 
-    def reset_pos(self):
+    def reset(self):
         self.x = (self.random.random() - 0.5) * self.max_x
         self.y = (self.random.random() - 0.5) * self.max_y
+        self.score = 0
 
     def update(self, t):
         valx = self.noiseX.noise2d(1, t + self.offsetX)

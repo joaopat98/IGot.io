@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from django.http import JsonResponse, HttpResponseNotAllowed, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 
+from .models import Score
 from .forms import UserCreationForm, ProfileForm
 from .data import *
 
@@ -58,7 +59,11 @@ def login_session(request):
 
 
 def join(request):
-    player = new_player()
+    request.session["name"] = request.POST["name"]
+    score = Score.objects.filter(name=request.POST["name"]).first()
+    if score is None:
+        Score.objects.create(name=request.POST["name"])
+    player = new_player(request.POST["name"])
     request.session["player"] = player.uid
     return JsonResponse({
         "playerX": player.x,

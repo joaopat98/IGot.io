@@ -2,7 +2,13 @@
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
+
+from .models import Score
 from .data import *
+
+def updateScore(score, name):
+    s = Score.objects.filter(name=name).first()
+    s.score = max(s.score, score)
 
 
 class GameConsumer(WebsocketConsumer):
@@ -31,7 +37,8 @@ class GameConsumer(WebsocketConsumer):
             target = get_target(player, obj["rotation"])
             if target is not None:
                 if target.is_player:
-                    target.reset_pos()
+                    player.score += floor(target.score / 2)
+                    target.reset()
                 else:
                     del bots[target.uid]
 
