@@ -11,7 +11,7 @@ from math import atan2, degrees, radians, tan, sin
 
 players = {}
 bots = {}
-NUM_BOTS = 20
+NUM_BOTS = 15
 max_id = 0
 TIME_DIV = 1000
 epoch = datetime.datetime.utcfromtimestamp(0)
@@ -32,6 +32,8 @@ def is_in_range(x, y, ang):
     y = -y
     p_1 = cos(radians(ang)) * fov
     p_2 = sin(radians(ang)) * fov
+    if p_1 * x + p_2 * y < 0:
+        return False
     magn = sqrt(p_1 ** 2 + p_2 ** 2)
     p_1 /= magn
     p_2 /= magn
@@ -88,6 +90,9 @@ class Character:
     def __init__(self, max_x, max_y, random, uid, speed, is_player):
         self.x = (random.random() - 0.5) * max_x
         self.y = (random.random() - 0.5) * max_y
+        self.max_x = max_x
+        self.max_y = max_y
+        self.random = random
         self.uid = uid
         self.is_player = is_player
         self.offsetX = random.random()
@@ -96,6 +101,10 @@ class Character:
         self.noiseY = OpenSimplex(seed=random.randint(0, 1000000000))
         self.speed = speed
         self.skin = rand.randint(0, 10)
+
+    def reset_pos(self):
+        self.x = (self.random.random() - 0.5) * self.max_x
+        self.y = (self.random.random() - 0.5) * self.max_y
 
     def update(self, t):
         valx = self.noiseX.noise2d(1, t + self.offsetX)
@@ -152,7 +161,6 @@ class Updater(Thread):
                              list(map(lambda p: p.serialize(), players.values()))
                 })
             })
-            sleep(1 / 100)
 
 
 rand = Random()

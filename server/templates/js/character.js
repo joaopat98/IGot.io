@@ -78,17 +78,6 @@ class Character extends createjs.Container {
             if (tx != 0 || ty != 0) {
                 let movementX = tx * this.moveSpeed * (delta / 1000);
                 let movementY = ty * this.moveSpeed * (delta / 1000);
-                if (this.x + movementX <= -this.mapWidth / 2 + this.width / 2
-                    || this.x + movementX >= this.mapWidth / 2 - this.width / 2) {
-                    movementX = 0;
-
-                }
-
-                if (this.y + movementY <= -this.mapHeight / 2 + this.height / 2
-                    || this.y + movementY >= this.mapHeight / 2 - this.height / 2) {
-                    movementY = 0;
-
-                }
                 ws.send(JSON.stringify({
                     action: "move",
                     deltaX: movementX,
