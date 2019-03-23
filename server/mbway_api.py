@@ -1,9 +1,8 @@
 import http.client
 import json
 
-
-def main():
-	generate()
+#numero: /purchase -> recebe transactionToken -> /inquiry com transactionToken
+#QR: /generate -> recebe qrCodeImage em base64 e qrCodeToken -> /inquiry com qrCodeToken -> Recebe qrCodePaymentToken -> /purchase com qrCodePaymentToken -> recebe statusCode = APPR
 	
 def check_status_code(code):
 	if code == "000":
@@ -11,7 +10,13 @@ def check_status_code(code):
 	else:
 		return False
 
-def generate():
+def QR_code_option():
+	generate(value)
+
+def phone_number_option():
+	purchase(identifier, number, value)
+
+def generate(value):
 	conn = http.client.HTTPSConnection("site1.sibsapimarket.com:8444")
 	payload = "{\"amount\":{\"value\":23.05,\"description\":\"Microtransaction igot.io\"}}"
 	
@@ -28,9 +33,6 @@ def generate():
 
 	data = data.decode("utf-8")
 	data = json.loads(data)
-
-
-	print(data)
 
 	if data["statusCode"]=="APPR":
 		inquiryQR(data["qrCodeToken"])
