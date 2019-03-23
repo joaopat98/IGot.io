@@ -44,6 +44,15 @@ function init() {
                         arena.addChild(c);
                     }
                 });
+                console.log(newData.chars);
+                console.log(arena.chars);
+
+                for(let char in arena.chars) {
+                    if (newData.chars.find(c => c.id == char) === undefined) {
+                        arena.removeChild(arena.chars[char]);
+                        delete arena.chars[char]
+                    }
+                }
             }
         });
     });
