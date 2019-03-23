@@ -1,6 +1,8 @@
 window.onload = () => {
     let inputs = document.getElementsByTagName("input");
-    inputs.forEach(input => input.onchange = textChange);
+    for (let i = 0; i < inputs.length; i++) {
+        inputs[i].onchange = textChange;
+    }
 };
 
 input = {};
@@ -11,7 +13,17 @@ let textChange = ev => {
 };
 
 let submit = () => {
-    console.log(input);
+    Request.post("api/register", input).then(response => {
+        if (response.status !== 200) {
+            response.json().then(errors => {
+
+            });
+        } else {
+            response.json().then(data => {
+                window.location.assign(window.location.origin);
+            });
+        }
+    });
 };
 
 let main = () => {
