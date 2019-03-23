@@ -34,13 +34,11 @@ def generate(value):
 	data = json.loads(data)
 
 	if data["statusCode"]=="APPR":
-		inquiryQR(data["qrCodeToken"])
+		return data
 	else:
 		print("Erro interno")
 
 def inquiryQR(qrCodeToken):
-	print("Entrou QRinquiry")
-	print(qrCodeToken)
 	flag=False
 	conn = http.client.HTTPSConnection("site1.sibsapimarket.com:8444")
 	payload = "{\"qrCodeToken\":\""+qrCodeToken+"\"}"
@@ -59,8 +57,6 @@ def inquiryQR(qrCodeToken):
 	data = data.decode("utf-8")
 	data = json.loads(data)
 
-	print(data)
-
 	if check_status_code(data["statusCode"]):
 		while(flag==False):
 			conn.request("POST", "/pixelscamp/apimarket/mbwaypurchases/mbwayid-pixelscamp/v1/inquiry", payload, headers)
@@ -70,8 +66,6 @@ def inquiryQR(qrCodeToken):
 
 			data = data.decode("utf-8")
 			data = json.loads(data)
-
-			print("DATA 2"+data)
 
 			transactionStatusCode = data["transactions"][0]["transactionStatusCode"]
 			if transactionStatusCode == "4":
