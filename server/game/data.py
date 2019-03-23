@@ -23,6 +23,7 @@ speed = 250
 fov = 600
 baseY = 0
 bot_kill = 1
+player_kill = 5
 
 
 def mod(a, n):
@@ -139,7 +140,8 @@ class Character:
             "x": self.x,
             "y": self.y,
             "id": self.uid,
-            "skin": self.skin
+            "skin": self.skin,
+            "score"
         }
 
 

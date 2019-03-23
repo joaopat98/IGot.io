@@ -40,7 +40,7 @@ class GameConsumer(WebsocketConsumer):
             target = get_target(player, obj["rotation"])
             if target is not None:
                 if target.is_player:
-                    player.score += floor(target.score / 2)
+                    player.score += player_kill
                     database_sync_to_async(updateScore(player.score, self.scope["session"]["name"]))
                     target.reset()
                 else:
