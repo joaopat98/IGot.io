@@ -23,5 +23,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     path("api/", include('game.urls')),
     path("play", TemplateView.as_view(template_name="game.html")),
-    url(r'^', ensure_csrf_cookie(TemplateView.as_view(template_name="test.html"))),
+    url(r'^', ensure_csrf_cookie(TemplateView.as_view(template_name="index.html"))),
 ]
