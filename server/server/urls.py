@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
+from . import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -25,5 +26,7 @@ urlpatterns = [
     path("register", TemplateView.as_view(template_name="register.html")),
     path("login", TemplateView.as_view(template_name="login.html")),
     path("play", TemplateView.as_view(template_name="game.html")),
-    url(r'^', ensure_csrf_cookie(TemplateView.as_view(template_name="index.html"))),
+    path("shop", TemplateView.as_view(template_name="shop.html")),
+    url(r'^', views.homepage),
+    #url(r'^', ensure_csrf_cookie(TemplateView.as_view(template_name="index.html"))),
 ]
