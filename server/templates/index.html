@@ -16,12 +16,15 @@
     <div class="container" style="margin-top: 60px" align="center">
         <div class="row">
             <div class="col">
-                <h1>igot.io</h1>
+                <img src="/static/res/logo.png" style="max-width: 350px;">
             </div>
         </div>
-        <div class="row" style="margin-top: 60px; margin-bottom: 60px;">
-            <div class="col">
-                <i class="fa fa-play" id="play-btn"></i>
+        <div class="row" style="margin-top: 100px; margin-bottom: 100px;">
+            <div class="col-6" align="right">
+                <i class="fa fa-play" id="game-btn" style="margin-right: 30px"></i>
+            </div>
+            <div class="col-6" align="left">
+                <i class="fa fa-question" id="game-btn" style="margin-left: 30px" data-toggle="modal" data-target="#help-dialog"></i>
             </div>
         </div>
         <div class="row">
@@ -29,7 +32,7 @@
                 <input id="username_box" type="text" class="textbox" name="username" placeholder="Username">
             </div>
         </div>
-        <div class="row" style="margin-top: 60px; margin-bottom: 20px;">
+        <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
             <div class="col-6" align="right">
                 <button class="primary-btn">Login</button>
             </div>
@@ -63,6 +66,61 @@
                     <div class="centered">
                         <i class="fa fa-lock" style="font-size: 20px;"></i>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="help-dialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Help</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="modal-title" style="font-size: 16px;">The Game</h5>
+                    <p style="font-size: 14px;">The goals and mechanics of the game are extremely simple: you, the player, have to shoot the other players in order to make points and win the game. HOWEVER, there's a catch: among the human players, there will be bots disguised as other players running around. The goal is to find out who are the human players and kill them before they kill you, but if you kill a bot you lose points.</p>
+                    <h5 class="modal-title" style="font-size: 16px;">Controls</h5>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6 my-auto" align="center">
+                                <div class="row my-auto" style="padding-bottom: 5px;">
+                                    <div class="col">
+                                        <img src="/static/res/keys/w.png" height="48">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <img src="/static/res/keys/a.png" height="48">
+                                        <img src="/static/res/keys/s.png" height="48">
+                                        <img src="/static/res/keys/d.png" height="48">
+                                        <p style="font-size: 14px; margin-top: 5px;">Move the character across the map. If you can't beat them, join them.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row" style="padding-bottom: 5px;">
+                                    <div class="col">
+                                        <img src="/static/res/keys/j.png" height="48">
+                                        <img src="/static/res/keys/k.png" height="48">
+                                        <p style="font-size: 14px; margin-top: 5px;">Control the aim to the right and left, respectively.  Make sure to step up your aim!</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <img src="/static/res/keys/spacebar.png" height="48">
+                                        <p style="font-size: 14px; margin-top: 5px;">Shoot the characters you think are real players. Can you handle the bluff?</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">igot.it</button>
                 </div>
             </div>
         </div>
