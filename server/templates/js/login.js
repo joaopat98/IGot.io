@@ -13,7 +13,7 @@ let textChange = ev => {
 };
 
 let submit = () => {
-    Request.post("api/register", input).then(response => {
+    Request.post("api/login", input).then(response => {
         if (response.status !== 200) {
             response.json().then(errors => {
 

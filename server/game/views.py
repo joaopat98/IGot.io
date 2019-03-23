@@ -66,6 +66,11 @@ def join(request):
         Score.objects.create(name=request.POST["name"])
     player = new_player(request.POST["name"])
     request.session["player"] = player.uid
+    return HttpResponse()
+
+
+def load(request):
+    player = players[request.session["player"]]
     return JsonResponse({
         "playerX": player.x,
         "playerY": player.y,

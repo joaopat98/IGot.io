@@ -4,6 +4,8 @@ class Character extends createjs.Container {
     constructor(x, y, sprite, charSize, laserSprite, laserWidth, laserHeight, isPlayer, mapWidth, mapHeight, id, speed) {
         super();
         this.id = id;
+        this.score = 0;
+        this.lives = 5;
         this.shootOnce = true;
         this.moveSpeed = speed;
         this.turnSpeed = 250;
