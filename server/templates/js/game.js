@@ -104,6 +104,7 @@ function leaderboard(){
 
 function createScore(){
     score = new createjs.Text("Own score:" + player.score, "20px Arial", "#000000");
+    console.log(score.getBounds().width);
     score.x = stage.canvas.width - score.getBounds().width - 5;
     score.y = stage.canvas.height - score.getBounds().height - 5;
 }
