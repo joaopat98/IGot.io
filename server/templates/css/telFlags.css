@@ -1,5 +1,5 @@
-.iti-flag {background-image: url("static/res/flags.png");}
+.iti-flag {background-image: url("../res/flags.png");}
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .iti-flag {background-image: url("static/res/flags@2x.png");}
+  .iti-flag {background-image: url("../res/flags@2x.png");}
 }

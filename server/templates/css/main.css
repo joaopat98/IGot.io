@@ -1,5 +1,5 @@
 body {
-    background-image: url("/static/res/tile.png");
+    background-image: url("../res/tile.png");
     background-repeat: repeat;
 }
 
