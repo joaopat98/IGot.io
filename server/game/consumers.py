@@ -46,11 +46,11 @@ class GameConsumer(WebsocketConsumer):
             if target is not None:
                 if target.is_player:
                     player.score += player_kill
-                    database_sync_to_async(updateScore(player.score, self.scope["session"]["name"]))
+                    updateScore(player.score, self.scope["session"]["name"])
                     target.reset()
                 else:
                     player.score -= bot_kill
-                    database_sync_to_async(updateScore(player.score, self.scope["session"]["name"]))
+                    updateScore(player.score, self.scope["session"]["name"])
                     del bots[target.uid]
                     new_c = Character(map_width, map_height, rand, max_id, speed, False)
                     bots[max_id] = new_c
