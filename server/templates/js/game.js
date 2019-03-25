@@ -35,7 +35,7 @@ function init() {
                 config();
                 window.addEventListener("keydown", keyHandler);
                 window.addEventListener("keyup", keyHandler);
-                ws = new WebSocket("ws://" + window.location.host + "/ws/group");
+                ws = new WebSocket("wss://" + window.location.host + "/ws/group");
                 ws.onmessage = message => {
                     let newData = JSON.parse(message.data);
                     newData.chars.forEach(char => {
