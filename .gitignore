@@ -67,3 +67,4 @@ fabric.properties
 *.pyc
 server/server/credentials.json
 .vscode/
+server/staticfiles/
