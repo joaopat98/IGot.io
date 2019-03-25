@@ -1,7 +1,8 @@
+import atexit
 import datetime
 import json
 from math import sqrt, floor, cos
-from threading import Thread, Lock
+from threading import Thread, Lock, Event
 from random import Random
 from time import sleep
 from channels.layers import get_channel_layer
@@ -9,6 +10,10 @@ from asgiref.sync import async_to_sync
 from opensimplex import OpenSimplex
 from math import atan2, degrees, radians, tan, sin
 from .models import Skin
+import sys
+
+
+print(sys.argv)
 
 players = {}
 bots = {}
@@ -109,7 +114,7 @@ class Character:
         self.noiseY = OpenSimplex(seed=random.randint(0, 1000000000))
         self.speed = speed
         if not is_player:
-            self.skin = list(Skin.objects.all())[rand.randint(0, Skin.objects.count()-1)].slang
+            self.skin = list(Skin.objects.all())[rand.randint(0, Skin.objects.count() - 1)].slang
         else:
             self.skin = Skin.objects.filter(slang=skin_slang).first().slang
 
@@ -154,11 +159,17 @@ class Character:
 
 class Updater(Thread):
     def __init__(self):
-        Thread.__init__(self)
-        self.shouldRun = True
+        super(Updater, self).__init__()
+        self._stop_event = Event()
+
+    def stop(self):
+        self._stop_event.set()
+
+    def stopped(self):
+        return self._stop_event.is_set()
 
     def run(self):
-        while self.shouldRun:
+        while not self._stop_event.is_set():
             global old_t
 
             secs = (datetime.datetime.now() - epoch).total_seconds()
@@ -187,4 +198,5 @@ for i in range(NUM_BOTS):
     max_id += 1
 
 updater = Updater()
-updater.start()
+if sys.argv[1] == "runserver":
+    updater.start()
