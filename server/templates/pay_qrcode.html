@@ -14,7 +14,11 @@
 						console.log(data);
 						$("#decoder").attr("src", "data:image/png;base64, " + data["qrCodeImage"])
 						qrCodeToken = data['qrCodeToken']
-						Request.post("api/inquiry", {'qrCodeToken': qrCodeToken, 'skin': skin});
+						Request.post("api/inquiry", {'qrCodeToken': qrCodeToken, 'skin': skin}).then(response => {
+						    if (response.status === 200){
+						        window.location.assign(window.location.origin + "/shop");
+                            }
+                        });
 					});
 				}
 			})

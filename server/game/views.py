@@ -119,9 +119,10 @@ def qr_code_payment(request):
 def qr_inquiry(request):
     if request.method == "POST":
         code = request.POST["qrCodeToken"]
-        if code == 200:
+        status = mbway_api.inquiryQR(code)
+        if status == 200:
             UserSkins.objects.create(profile=request.user.user_profile,
                                      skin=Skin.objects.filter(slang=request.POST["skin"]).first())
-        return HttpResponse(mbway_api.inquiryQR(code))
+        return HttpResponse(status=status)
     else:
         return HttpResponseNotAllowed("Method not Allowed")
