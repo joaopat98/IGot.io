@@ -113,7 +113,7 @@ class Character:
         self.noiseX = OpenSimplex(seed=random.randint(0, 1000000000))
         self.noiseY = OpenSimplex(seed=random.randint(0, 1000000000))
         self.speed = speed
-        if sys.argv[1] == "runserver":
+        if sys.argv[1] in ("runserver", 'server.asgi:application'):
             if not is_player:
                 self.skin = list(Skin.objects.all())[rand.randint(0, Skin.objects.count() - 1)].slang
             else:
@@ -199,5 +199,5 @@ for i in range(NUM_BOTS):
     max_id += 1
 
 updater = Updater()
-if sys.argv[1] == "runserver":
+if sys.argv[1] in ("runserver", 'server.asgi:application'):
     updater.start()
