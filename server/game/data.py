@@ -113,10 +113,11 @@ class Character:
         self.noiseX = OpenSimplex(seed=random.randint(0, 1000000000))
         self.noiseY = OpenSimplex(seed=random.randint(0, 1000000000))
         self.speed = speed
-        if not is_player:
-            self.skin = list(Skin.objects.all())[rand.randint(0, Skin.objects.count() - 1)].slang
-        else:
-            self.skin = Skin.objects.filter(slang=skin_slang).first().slang
+        if sys.argv[1] == "runserver":
+            if not is_player:
+                self.skin = list(Skin.objects.all())[rand.randint(0, Skin.objects.count() - 1)].slang
+            else:
+                self.skin = Skin.objects.filter(slang=skin_slang).first().slang
 
     def reset(self):
         self.x = (self.random.random() - 0.5) * self.max_x
