@@ -9,12 +9,10 @@ class Arena extends createjs.Container {
 		worldShape.y = -height/2;
 		this.addChild(worldShape);
 		this.player = player;
-		this.otherPlayers = new Array();
+		this.chars = {};
+		this.chars[player.id] = player;
 		this.objects = new Array();
 		this.gameTime = gameTime;
-		this.addChild(player.sprite);
-		if(player.isPlayer){      
-			this.addChild(player.laserSprite);
-		}
+		this.addChild(player);
 	}
 }
